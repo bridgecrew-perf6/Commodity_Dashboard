@@ -7,7 +7,7 @@ import plotly
 import plotly.express as px
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-import talib
+# import talib
 import quandl
 import streamlit as st
 
@@ -500,173 +500,173 @@ if radio == 'Performance History':
 
 if radio == 'Technical Analysis':
 
-    # Price range
-    st.header('» Price Ranking')
-    st.write('For each commodity, the current price is compared to the maximum price '
-             'over the designated timeframe. For example, if the price rank of Gold equals 70% on a YTD basis, '
-             'then the price of Gold is currently 70% of the maximum value registered since the beginning of the calendar year. '
-             'The chart can be used to identify relative value opportunities on an individual and sector-level basis.')
+#     # Price range
+#     st.header('» Price Ranking')
+#     st.write('For each commodity, the current price is compared to the maximum price '
+#              'over the designated timeframe. For example, if the price rank of Gold equals 70% on a YTD basis, '
+#              'then the price of Gold is currently 70% of the maximum value registered since the beginning of the calendar year. '
+#              'The chart can be used to identify relative value opportunities on an individual and sector-level basis.')
 
-    timeframe2 = st.select_slider('', ['MTD', 'QTD', 'YTD', '1 YEAR'], key=10)
+#     timeframe2 = st.select_slider('', ['MTD', 'QTD', 'YTD', '1 YEAR'], key=10)
 
-    def price_range():
-        # Calculate price as a percent of range
-        def price_range_calc(prices):
-            last = prices[-1]
-            low = prices.min()
-            high = prices.max()
-            range = (last-low) / (high-low)
-            return range
+#     def price_range():
+#         # Calculate price as a percent of range
+#         def price_range_calc(prices):
+#             last = prices[-1]
+#             low = prices.min()
+#             high = prices.max()
+#             range = (last-low) / (high-low)
+#             return range
 
-        # Identify range based on slider widget
-        if timeframe2 == 'MTD':
-            df = prices_mtd
-        elif timeframe2 == 'QTD':
-            df = prices_qtd
-        elif timeframe2 == 'YTD':
-            df = prices_ytd
-        elif timeframe2 == '1 YEAR':
-            df = prices_yr1
-        else:
-            st.error('User must select timeframe in order to populate performance history.')
+#         # Identify range based on slider widget
+#         if timeframe2 == 'MTD':
+#             df = prices_mtd
+#         elif timeframe2 == 'QTD':
+#             df = prices_qtd
+#         elif timeframe2 == 'YTD':
+#             df = prices_ytd
+#         elif timeframe2 == '1 YEAR':
+#             df = prices_yr1
+#         else:
+#             st.error('User must select timeframe in order to populate performance history.')
 
-        # Apply range calculation to sliced df
-        range_timeframe2 = df.apply(price_range_calc)
-        fig_data = range_timeframe2.sort_values()*100
+#         # Apply range calculation to sliced df
+#         range_timeframe2 = df.apply(price_range_calc)
+#         fig_data = range_timeframe2.sort_values()*100
 
-        return fig_data.round(2)
+#         return fig_data.round(2)
 
-    # Plot Price Range
-    fig_data = pd.Series(price_range(), name='%ofRange')
-    sec = [i for i in sector_list if i != 'Index']
-    name = [i for i in commodity_list if 'BCOM' not in i]
-    dic = {'Sector':sec, 'Name':name}
-    sectors = pd.DataFrame(dic).set_index('Name')
+#     # Plot Price Range
+#     fig_data = pd.Series(price_range(), name='%ofRange')
+#     sec = [i for i in sector_list if i != 'Index']
+#     name = [i for i in commodity_list if 'BCOM' not in i]
+#     dic = {'Sector':sec, 'Name':name}
+#     sectors = pd.DataFrame(dic).set_index('Name')
     
-    df = pd.merge(sectors, fig_data, right_index=True,
-                  left_index=True).sort_values('%ofRange')
+#     df = pd.merge(sectors, fig_data, right_index=True,
+#                   left_index=True).sort_values('%ofRange')
 
-    fig = px.bar(x=df.index,
-                 y=df['%ofRange'],
-                 height=500,
-                 width=800,
-                 template='plotly_white',
-                 color=df['Sector'],
-                 labels={'color': 'Sector', 'y': '', }
-                 )
+#     fig = px.bar(x=df.index,
+#                  y=df['%ofRange'],
+#                  height=500,
+#                  width=800,
+#                  template='plotly_white',
+#                  color=df['Sector'],
+#                  labels={'color': 'Sector', 'y': '', }
+#                  )
 
-    fig.update_yaxes(title='Price as a Percent of the {} Range'.format(
-        timeframe2), ticksuffix='%')
-    fig.update_xaxes(title='')
-    fig.update_layout(font_size=12, margin=dict(l=0, r=0, t=0, b=0))
-    st.plotly_chart(fig)
+#     fig.update_yaxes(title='Price as a Percent of the {} Range'.format(
+#         timeframe2), ticksuffix='%')
+#     fig.update_xaxes(title='')
+#     fig.update_layout(font_size=12, margin=dict(l=0, r=0, t=0, b=0))
+#     st.plotly_chart(fig)
 
-    # Moving Averages
-    st.header('» Moving Averages')
-    st.write('First, select a single commodity or index to analyze. Next, select Simple or Exponential moving average. '
-             'Simple will take the mean of the previous x number of days, treating all data points with equal prominence. '
-             'Exponential places greater weight and significance on the most recent data points. Lastly, use the slider widget '
-             'to select the number of days to use in calculating the moving average windows. In general, a shorter window may create a '
-             'more timely signal; howevever, it is often at the expense of reliability.')
+#     # Moving Averages
+#     st.header('» Moving Averages')
+#     st.write('First, select a single commodity or index to analyze. Next, select Simple or Exponential moving average. '
+#              'Simple will take the mean of the previous x number of days, treating all data points with equal prominence. '
+#              'Exponential places greater weight and significance on the most recent data points. Lastly, use the slider widget '
+#              'to select the number of days to use in calculating the moving average windows. In general, a shorter window may create a '
+#              'more timely signal; howevever, it is often at the expense of reliability.')
 
-    cmdty = st.selectbox('Select a commodity:', commodity_list, key=11)
-    ma_type = st.radio('', options=[
-                       'Simple Moving Average (SMA)', 'Exponential Moving Average (EMA)'], key=12)
+#     cmdty = st.selectbox('Select a commodity:', commodity_list, key=11)
+#     ma_type = st.radio('', options=[
+#                        'Simple Moving Average (SMA)', 'Exponential Moving Average (EMA)'], key=12)
 
-    # Split View Into Columns
-    col1, col2 = st.beta_columns([1, 1])
-    with col1:
-        ma_days1 = st.slider('Moving Average #1', min_value=5,
-                             max_value=100, step=5, key=13)
-    with col2:
-        ma_days2 = st.slider('Moving Average #2', min_value=5,
-                             max_value=100, step=5, key=14)
+#     # Split View Into Columns
+#     col1, col2 = st.beta_columns([1, 1])
+#     with col1:
+#         ma_days1 = st.slider('Moving Average #1', min_value=5,
+#                              max_value=100, step=5, key=13)
+#     with col2:
+#         ma_days2 = st.slider('Moving Average #2', min_value=5,
+#                              max_value=100, step=5, key=14)
 
-    @st.cache(persist=True)
-    def moving_average():
-        # Copy prices
-        data = {'Price': pd.Series(all_prices[cmdty].fillna(method='ffill'))}
+#     @st.cache(persist=True)
+#     def moving_average():
+#         # Copy prices
+#         data = {'Price': pd.Series(all_prices[cmdty].fillna(method='ffill'))}
 
-        # Account for window type
-        if ma_type == 'Exponential Moving Average (EMA)':
-            data['EMA1'] = pd.Series(
-                talib.EMA(all_prices[cmdty], timeperiod=ma_days1))
-            data['EMA2'] = pd.Series(
-                talib.EMA(all_prices[cmdty], timeperiod=ma_days2))
-        else:
-            data['SMA1'] = pd.Series(
-                talib.SMA(all_prices[cmdty], timeperiod=ma_days1))
-            data['SMA2'] = pd.Series(
-                talib.SMA(all_prices[cmdty], timeperiod=ma_days2))
+#         # Account for window type
+#         if ma_type == 'Exponential Moving Average (EMA)':
+#             data['EMA1'] = pd.Series(
+#                 talib.EMA(all_prices[cmdty], timeperiod=ma_days1))
+#             data['EMA2'] = pd.Series(
+#                 talib.EMA(all_prices[cmdty], timeperiod=ma_days2))
+#         else:
+#             data['SMA1'] = pd.Series(
+#                 talib.SMA(all_prices[cmdty], timeperiod=ma_days1))
+#             data['SMA2'] = pd.Series(
+#                 talib.SMA(all_prices[cmdty], timeperiod=ma_days2))
 
-        df = pd.concat(data, axis=1)
-        return df
+#         df = pd.concat(data, axis=1)
+#         return df
 
-    # Plot Moving Averages
-    fig_data = moving_average()
-    fig = px.line(fig_data, template='plotly_white', labels={
-                  'variable': '', 'value': '', 'Date': ''}, width=800, height=400)
-    fig.update_layout(showlegend=True, margin=dict(l=0, r=0, t=0, b=0))
-    st.plotly_chart(fig)
+#     # Plot Moving Averages
+#     fig_data = moving_average()
+#     fig = px.line(fig_data, template='plotly_white', labels={
+#                   'variable': '', 'value': '', 'Date': ''}, width=800, height=400)
+#     fig.update_layout(showlegend=True, margin=dict(l=0, r=0, t=0, b=0))
+#     st.plotly_chart(fig)
 
-    # Momentum Indicators
-    st.header('» Momentum Indicators')
-    st.write('First, select a single commodity or index to analyze. Next, select a desired set of technical indicators. '
-             'The parameters for MACD and RSI are fixed to the industry standards, 12-26-9 periods for MACD and 14 periods for '
-             'RSI. The lookback period for Momentum must be selected using the slider widget. For further explanation regarding the use '
-             'of technical indicators and oscillators, please refer to investopedia.com or stockcharts.com.')
+#     # Momentum Indicators
+#     st.header('» Momentum Indicators')
+#     st.write('First, select a single commodity or index to analyze. Next, select a desired set of technical indicators. '
+#              'The parameters for MACD and RSI are fixed to the industry standards, 12-26-9 periods for MACD and 14 periods for '
+#              'RSI. The lookback period for Momentum must be selected using the slider widget. For further explanation regarding the use '
+#              'of technical indicators and oscillators, please refer to investopedia.com or stockcharts.com.')
 
-    cmdty = st.selectbox('Select a commodity:', commodity_list, key=15)
+#     cmdty = st.selectbox('Select a commodity:', commodity_list, key=15)
 
-    # Split View Into Columns
-    col1, col2 = st.beta_columns([1, 1])
-    with col1:
-        widget_macd = st.checkbox('MACD Oscillator', value=True, key=16)
-        widget_rsi = st.checkbox('RSI Oscillator', value=True, key=17)
-    with col2:
-        widget_mom = st.checkbox('Momentum Oscillator', value=True, key=18)
-        widget_mom_slider = st.slider(
-            'Select momentum lookback in days', min_value=5, max_value=100, step=5, key=19)
+#     # Split View Into Columns
+#     col1, col2 = st.beta_columns([1, 1])
+#     with col1:
+#         widget_macd = st.checkbox('MACD Oscillator', value=True, key=16)
+#         widget_rsi = st.checkbox('RSI Oscillator', value=True, key=17)
+#     with col2:
+#         widget_mom = st.checkbox('Momentum Oscillator', value=True, key=18)
+#         widget_mom_slider = st.slider(
+#             'Select momentum lookback in days', min_value=5, max_value=100, step=5, key=19)
 
-    # Calculate Momentum Indicators with TA-Lib
-    @st.cache(persist=True)
-    def technical_analysis():
-        data = {'Price': pd.Series(all_prices[cmdty].fillna(method='ffill'))}
-        if widget_mom:
-            data['Momentum'] = pd.Series(
-                talib.MOM(all_prices[cmdty], timeperiod=widget_mom_slider))
-        if widget_macd:
-            data['MACD'] = pd.Series(talib.MACD(all_prices[cmdty])[0])
-        if widget_rsi:
-            data['RSI'] = pd.Series(talib.RSI(all_prices[cmdty]))
+#     # Calculate Momentum Indicators with TA-Lib
+#     @st.cache(persist=True)
+#     def technical_analysis():
+#         data = {'Price': pd.Series(all_prices[cmdty].fillna(method='ffill'))}
+#         if widget_mom:
+#             data['Momentum'] = pd.Series(
+#                 talib.MOM(all_prices[cmdty], timeperiod=widget_mom_slider))
+#         if widget_macd:
+#             data['MACD'] = pd.Series(talib.MACD(all_prices[cmdty])[0])
+#         if widget_rsi:
+#             data['RSI'] = pd.Series(talib.RSI(all_prices[cmdty]))
 
-        df = pd.concat(data, axis=1)
-        return df
+#         df = pd.concat(data, axis=1)
+#         return df
 
-    # Plot Technical Analysis Chart
-    df = technical_analysis()
-    fig = make_subplots(rows=len(df.columns), cols=1,
-                        shared_xaxes=True, vertical_spacing=0.03)
-    fig.add_trace(go.Scatter(
-        x=df.index, y=df['Price'].values, name='Price'), row=1, col=1)
+#     # Plot Technical Analysis Chart
+#     df = technical_analysis()
+#     fig = make_subplots(rows=len(df.columns), cols=1,
+#                         shared_xaxes=True, vertical_spacing=0.03)
+#     fig.add_trace(go.Scatter(
+#         x=df.index, y=df['Price'].values, name='Price'), row=1, col=1)
 
-    j = 2
-    for col in df.columns[1:]:
-        fig.add_trace(go.Scatter(
-            x=df.index, y=df[col].values, name=df[col].name), row=j, col=1)
-        if col == 'RSI':
-            fig.add_shape(type='rect', x0=df.index[0], y0=30, x1=df.index[-1], y1=70, line=dict(
-                color='Blue', width=2), fillcolor='LightSkyBlue', row=j, col=1)
-        elif col in ['Momentum','MACD']:
-            fig.add_shape(type='line', x0=df.index[0], y0=0, x1=df.index[-1], y1=0, line=dict(
-                color='Blue', width=2), row=j, col=1)
-        j += 1
+#     j = 2
+#     for col in df.columns[1:]:
+#         fig.add_trace(go.Scatter(
+#             x=df.index, y=df[col].values, name=df[col].name), row=j, col=1)
+#         if col == 'RSI':
+#             fig.add_shape(type='rect', x0=df.index[0], y0=30, x1=df.index[-1], y1=70, line=dict(
+#                 color='Blue', width=2), fillcolor='LightSkyBlue', row=j, col=1)
+#         elif col in ['Momentum','MACD']:
+#             fig.add_shape(type='line', x0=df.index[0], y0=0, x1=df.index[-1], y1=0, line=dict(
+#                 color='Blue', width=2), row=j, col=1)
+#         j += 1
 
-    fig.update_layout(height=500, width=800, template='simple_white',
-                      showlegend=True, margin=dict(l=0, r=0, t=0, b=0))
-    fig.update_xaxes(showgrid=True)
-    fig.update_yaxes(showgrid=True, nticks=7)
-    st.plotly_chart(fig)
+#     fig.update_layout(height=500, width=800, template='simple_white',
+#                       showlegend=True, margin=dict(l=0, r=0, t=0, b=0))
+#     fig.update_xaxes(showgrid=True)
+#     fig.update_yaxes(showgrid=True, nticks=7)
+#     st.plotly_chart(fig)
 
     # Page Footer
     st.write('')
