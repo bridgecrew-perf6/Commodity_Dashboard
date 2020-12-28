@@ -3,6 +3,7 @@ import pandas as pd
 import datetime as dt
 from pandas.tseries.offsets import BMonthEnd, BDay
 from datetime import date
+import plotly
 import plotly.express as px
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
