@@ -635,14 +635,14 @@ if radio == 'Technical Analysis':
         # Account for window type
         if ma_type == 'Exponential Moving Average (EMA)':
             data['EMA1'] = pd.Series(
-                ta.ema(all_prices[cmdty], length=ma_days1))
+                talib.EMA(all_prices[cmdty], timeperiod=ma_days1))
             data['EMA2'] = pd.Series(
-                ta.ema(all_prices[cmdty], length=ma_days2))
+                talib.EMA(all_prices[cmdty], timeperiod=ma_days2))
         else:
             data['SMA1'] = pd.Series(
-                ta.sma(all_prices[cmdty], length=ma_days1))
+                talib.SMA(all_prices[cmdty], timeperiod=ma_days1))
             data['SMA2'] = pd.Series(
-                ta.sma(all_prices[cmdty], length=ma_days2))
+                talib.SMA(all_prices[cmdty], timeperiod=ma_days2))
 
         df = pd.concat(data, axis=1)
         return df
@@ -680,11 +680,11 @@ if radio == 'Technical Analysis':
        
         if widget_mom:
             data['Momentum'] = pd.Series(
-                ta.mom(all_prices[cmdty], length=widget_mom_slider))
+                talib.MOM(all_prices[cmdty], timeperiod=widget_mom_slider))
         if widget_macd:
-            data['MACD'] = pd.Series(ta.macd(all_prices[cmdty], fast=12, slow=26, signal=9)[0])
+            data['MACD'] = pd.Series(talib.MACD(all_prices[cmdty])[0])
         if widget_rsi:
-            data['RSI'] = pd.Series(ta.rsi(all_prices[cmdty], length=14))
+            data['RSI'] = pd.Series(talib.RSI(all_prices[cmdty]))
             
         df = pd.concat(data, axis=1)
         return df
